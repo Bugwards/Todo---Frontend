@@ -18,7 +18,7 @@
   font-family: sans-serif;
 }
 
-/* Form */
+
 .signup-form, .signin-form {
   width: 100%;
   display: flex;
@@ -26,7 +26,6 @@
   gap: 15px;
 }
 
-/* Inputs */
 .signup-form input, .signin-form input {
   padding: 12px 15px;
   border-radius: 8px;
@@ -35,17 +34,17 @@
   font-size: 16px;
 }
 
-/* Input colors */
+
 .signup-form input::placeholder, .signin-form input::placeholder {
   color: #aaa;
 }
 
-/* Buttons */
+
 .signup-form button, .signin-form button {
   padding: 12px;
   border-radius: 8px;
   border: none;
-  background-color: #2563EB; /* Blue color */
+  background-color: #2563EB; 
   color: white;
   font-weight: bold;
   font-size: 16px;
@@ -54,10 +53,10 @@
 }
 
 .signup-form button:hover, .signin-form button:hover {
-  background-color: #1E40AF; /* Darker blue on hover */
+  background-color: #1E40AF; 
 }
 
-/* Error text */
+
 .error-text {
   color: #F87171; 
   font-size: 14px;
@@ -86,26 +85,26 @@
   font-size: 28px;
   font-weight: bold;
 }
-/* Inputs */
+
 .signup-form input, .signin-form input {
   padding: 12px 15px;
   border-radius: 8px;
-  border: 2px solid #374151; /* Dark gray border */
+  border: 2px solid #374151; 
   outline: none;
   font-size: 16px;
-  background-color: #1F2937; /* slightly lighter than background for contrast */
+  background-color: #1F2937; 
   color: #fff;
   transition: border 0.3s, background-color 0.3s;
 }
 
-/* Placeholder color */
+
 .signup-form input::placeholder, .signin-form input::placeholder {
-  color: #9CA3AF; /* light gray */
+  color: #9CA3AF;
 }
 
-/* Focus effect */
+
 .signup-form input:focus, .signin-form input:focus {
-  border-color: #3B82F6; /* blue border on focus */
-  background-color: #111827; /* darker background on focus */
+  border-color: #3B82F6; 
+  background-color: #111827; 
 }
 

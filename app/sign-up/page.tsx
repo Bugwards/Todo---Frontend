@@ -20,7 +20,6 @@ export default function SignUpPage() {
     setError("");
     setLoading(true);
 
-    // Client-side validation
     if (!email.includes("@")) {
       setError("Please enter a valid email.");
       setLoading(false);
@@ -46,7 +45,7 @@ export default function SignUpPage() {
     }
 
     try {
-      // Call backend API
+     
       const response = await api.register(username, email, password);
       
       console.log("Registration successful:", response);

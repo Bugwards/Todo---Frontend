@@ -14,7 +14,7 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in
+   
     const user = api.getCurrentUser();
     if (user) {
       router.push("/dashboard");
@@ -27,7 +27,7 @@ export default function SignInPage() {
     setLoading(true);
 
     try {
-      // Call backend API - can use email or username
+     
       const response = await api.login(email, password);
       
       console.log("Login successful:", response);

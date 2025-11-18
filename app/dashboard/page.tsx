@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from "next/link";
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
@@ -15,7 +16,9 @@ import {
   TrendingUp,
   Award,
   Zap,
-  Target
+  Target,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import api, { Todo, TodoStatistics } from '@/lib/api';
@@ -32,9 +35,8 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState<TodoStatistics | null>(null);
-
   const user = api.getCurrentUser();
-
+ 
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!user) {
@@ -63,7 +65,7 @@ export default function DashboardPage() {
       }
     };
     loadData();
-  }, [user]);
+  }, []);
 
   // Stats (from backend or computed)
   const completedTodos = stats?.completedTasks || todos.filter(t => t.completed).length;
@@ -117,7 +119,7 @@ export default function DashboardPage() {
 
   const handleLogout = () => {
     api.logout();
-    router.push('/login');
+    router.push('/sign-in');
   };
 
   const handleProfileImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,7 +157,7 @@ export default function DashboardPage() {
   if (!user) return null; // Prevent rendering until redirect
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white relative overflow-hidden">
+    <div className="flex min-h-screen bg-white dark:bg-slate-900 text-black dark:text-white relative overflow-hidden transition-colors duration-500">
       {/* Animated background effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
@@ -174,7 +176,7 @@ export default function DashboardPage() {
         animate={{ width: sidebarOpen ? 280 : 80 }}
         className="bg-slate-900/80 backdrop-blur-xl border-r border-slate-800/50 flex flex-col py-6 transition-all relative z-10 shadow-2xl"
       >
-        <div className="px-6 mb-8">
+        <div className="px-5 mb-8">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -220,9 +222,9 @@ export default function DashboardPage() {
           </motion.div>
         </div>
         <nav className="flex-1 flex flex-col gap-2 px-3">
-          <NavItem icon={<ClipboardList size={22} />} label="Tasks" active open={sidebarOpen} />
-          <NavItem icon={<User size={22} />} label="Profile" open={sidebarOpen} />
-          <NavItem icon={<Settings size={22} />} label="Settings" open={sidebarOpen} />
+          <NavItem icon={<ClipboardList size={22} />} href="" label="Tasks" active open={sidebarOpen} />
+          <NavItem icon={<User size={22} />} label="Profile" href="/profile" open={sidebarOpen}/>
+          
         </nav>
         <div className="px-3 mt-auto">
           <motion.button
@@ -250,6 +252,9 @@ export default function DashboardPage() {
                 Welcome back, {user.username.split(' ')[0]}! 👋
               </h1>
               <p className="text-slate-400">Here's what's happening with your tasks today.</p>
+              
+              
+
             </div>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -317,7 +322,7 @@ export default function DashboardPage() {
               />
             </div>
             {/* Charts Section */}
-            <div className="grid lg:grid-cols-2 gap-6 mb-8">
+            <div className="grid lg:grid-cols-1 gap-6 mb-8">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -326,7 +331,7 @@ export default function DashboardPage() {
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-bold text-white">Task Distribution</h2>
-                  <Award className="text-yellow-400" size={24} />
+                  <Award className="text-yellow-400" size={25} />
                 </div>
                 {totalTodos > 0 ? (
                   <ResponsiveContainer width="100%" height={280}>
@@ -361,34 +366,6 @@ export default function DashboardPage() {
                     No tasks yet. Create your first task!
                   </div>
                 )}
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 }}
-                className="bg-slate-900/50 backdrop-blur-xl border border-slate-800/50 p-6 rounded-2xl shadow-xl"
-              >
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-white">Weekly Progress</h2>
-                  <TrendingUp className="text-green-400" size={24} />
-                </div>
-                <ResponsiveContainer width="100%" height={280}>
-                  <BarChart data={barData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                    <XAxis dataKey="name" stroke="#94a3b8" />
-                    <YAxis stroke="#94a3b8" />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: '#1e293b',
-                        border: '1px solid #334155',
-                        borderRadius: '12px',
-                        color: '#fff'
-                      }}
-                    />
-                    <Bar dataKey="completed" fill="#10B981" radius={[8, 8, 0, 0]} />
-                    <Bar dataKey="pending" fill="#8B5CF6" radius={[8, 8, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
               </motion.div>
             </div>
             {/* Task Filters */}
@@ -539,20 +516,34 @@ export default function DashboardPage() {
   );
 }
 
-function NavItem({ icon, label, active, open }: { icon: React.ReactNode; label: string; active?: boolean; open: boolean }) {
+function NavItem({
+  icon,
+  label,
+  active,
+  open,
+  href
+}: {
+  icon: React.ReactNode;
+  label: string;
+  active?: boolean;
+  open: boolean;
+  href: string;
+}) {
   return (
-    <motion.button
-      whileHover={{ scale: 1.02, x: 5 }}
-      whileTap={{ scale: 0.98 }}
-      className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${
-        active
-          ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-400 border border-blue-500/30'
-          : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
-      }`}
-    >
-      {icon}
-      {open && <span className="font-medium">{label}</span>}
-    </motion.button>
+    <Link href={href} className="block">
+      <motion.div
+        whileHover={{ scale: 1.02, x: 5 }}
+        whileTap={{ scale: 0.98 }}
+        className={`flex items-center gap-3 px-3 py-3 rounded-xl cursor-pointer transition-all ${
+          active
+            ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-400 border border-blue-500/30'
+            : 'text-slate-400 hover:bg-slate-800/50 hover:text-white'
+        }`}
+      >
+        {icon}
+        {open && <span className="font-medium">{label}</span>}
+      </motion.div>
+    </Link>
   );
 }
 
